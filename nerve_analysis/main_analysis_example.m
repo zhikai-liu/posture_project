@@ -1,5 +1,5 @@
 %Example code for analysis
-M_file='ZL240626_M1_example_rec_baseline.mat';
+M_file='ZL240626_M1_example.mat';
 addpath('./utility/')
 process_raw_data_multi_unit(M_file);
 process_multi_unit(['analyzed_' M_file],[],[],[],[]);
