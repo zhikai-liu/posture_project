@@ -203,4 +203,4 @@ dependencies:
     - webencodings==0.5.1
     - websocket-client==1.8.0
     - widgetsnbextension==4.0.11
-prefix: /home/zl78/.conda/envs/skimage-dev
+prefix: /home/user/.conda/envs/skimage-dev
