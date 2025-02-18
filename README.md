@@ -1,10 +1,17 @@
-# Heart volume project
-Custom written codes for anatomical and electrophysiological analysis.
+# Installation tips and requirements
+Anatomical and electrophysiological analysis were carried out using custom-written codes in Python and Matlab, respectively.
 
-The general method for imaging analysis was described in the method section of the paper:
+The general approach was described in the method section of the paper (updated soon):
 
-An example image and a jupyter notebook example analysis are provided. To reproduce the results, the following softwares were tested:
-1. Jupyter Notebook
+Example datasets and example analysis codes are provided. To reproduce the results, the following softwares were tested:
+
+## Image analysis:
+1. JupyterLab 4
 2. Python 3 (miniconda3/4.10.3)
+3. Scikit-image 0.23
 
-Please use skimage-dev.yml to create the environment needed for the analysis.
+To create the same environment needed for the analysis, please use skimage-dev.yml as a reference for installation.
+
+
+## Ephys analysis:
+Matlab/2024a (with signal processing toolbox)
