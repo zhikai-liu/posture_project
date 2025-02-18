@@ -3,7 +3,7 @@ Anatomical and electrophysiological analysis were carried out using custom-writt
 
 The general approach was described in the method section of the paper (updated soon):
 
-Example datasets and example analysis codes are provided. To reproduce the results, the following softwares were tested:
+Example datasets and example analysis codes are provided for each analysis. The following softwares were tested:
 
 ## Image analysis:
 1. JupyterLab 4
@@ -13,5 +13,5 @@ Example datasets and example analysis codes are provided. To reproduce the resul
 To create the same environment needed for the analysis, please use skimage-dev.yml as a reference for installation.
 
 
-## Ephys analysis:
+## Nerve signal analysis:
 Matlab/2024a (with signal processing toolbox)
