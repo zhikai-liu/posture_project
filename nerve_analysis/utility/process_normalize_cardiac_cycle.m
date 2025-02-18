@@ -8,13 +8,13 @@ function process_normalize_cardiac_cycle(filename)
     RR_interval=1/hr*60;
     breathing_exclude = results.breathing_exclude;
     loc_x_l=results.loc_x_l;
-        % Pre-allocate arrays
-        x_zero = -0.1/si : 0.1/si;
+    % Pre-allocate arrays
+    x_zero = -0.1/si : 0.1/si;
     ECG_each_trial = zeros(length(x_zero), length(loc_x_l));
     event_total = [];
     amps_total = [];
     count_cycle = 1;
-    
+    % get signals outside of the breathing window
     for i = 2:length(loc_x_l)-2
         x_plot = loc_x_l(i) - 0.1/si : loc_x_l(i) + 0.1/si;
         is_breathing=intersect(loc_x_l(i):loc_x_l(i+1),breathing_exclude);
@@ -29,7 +29,7 @@ function process_normalize_cardiac_cycle(filename)
             ECG_each_trial(:, i) = nan;
         end
     end
-
+    % Detect peaks in ECG sigal
     mean_ECG = mean(ECG_each_trial, 2, 'omitnan');
     [ECG_peak, peak_index] = findpeaks(mean_ECG, 'MinPeakProminence', 0.3*std(mean_ECG), 'MinPeakDistance', 0.02/si);
     peak_index_zero=peak_index-(length(mean_ECG)+1)/2;

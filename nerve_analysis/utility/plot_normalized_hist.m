@@ -25,7 +25,7 @@ function plot_normalized_hist(filename)
     title(['Event Histogram - ' filename],'interpreter','none');
     xlim([-2 2]);
     AxisFormat();
-    ylim([0 1.5])
+    ylim([0 3]);
     hold off;
     export_svg_jpg(['hist_' filename])
     

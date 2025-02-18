@@ -20,15 +20,12 @@ raw_index=r_index;
 raw_l = length(raw_index);
 amp_raw = zeros(raw_l,1);
 peak_index = zeros(raw_l,1);
-for i = 1:raw_l
-    if i == raw_l
-        duration = min(event_duration,length(data_s)-raw_index(i)); % when it is the last event, make sure duration of the event didn't go beyond the end of the whole trace
-    else
-        duration = min(raw_index(i+1)-raw_index(i),event_duration);% Duration of event is the smaller one of either the pre-defined event durantion or before next event comes
-    end
+for i = 2:raw_l-1
+    duration = min(raw_index(i+1)-raw_index(i),event_duration);% Duration of event is the smaller one of either the pre-defined event durantion or before next event comes
     [peak_value,peak_index(i)] = max(data_s(raw_index(i):raw_index(i)+duration));
+    [min_value,~] = min(data_s(raw_index(i):raw_index(i)+duration));
     % Calculate the amplitude of each event
-    amp_raw(i)=peak_value-data_s(raw_index(i));
+    amp_raw(i)=peak_value-min_value;
     peak_index(i)=raw_index(i)+peak_index(i)-1;
     
 end

@@ -1,14 +1,9 @@
-function average_spike_num=process_multi_unit(filename,time_period,amp_factor,diff_factor,d_amp)
-% Load data from the current .mat file
+function process_multi_unit(filename)
+% Load data from the .mat file
 S = load(filename);
 si = S.si;
-if isempty(time_period)%||isnan(time_period)
     start_t=1;
     end_t=length(S.ECG);
-else
-    start_t=time_period(1)/si;
-    end_t=time_period(end)/si;
-end
 
 ECG = S.ECG(start_t:end_t);
 hr=S.hr_ecg(start_t:end_t);
@@ -30,14 +25,13 @@ loc_x_l = ecg_loc(ecg_loc > 1 & ecg_loc < length(ECG));
 count = 1;
 count_lim = 100;
 std_raw_nerve = [];
-rms_raw_nerve = [];
+
 % Calculate the std of signals to determine the noise level
 for i = 2:length(loc_x_l)-2
     is_breathing=intersect(loc_x_l(i):loc_x_l(i+1),breathing_exclude);
     if isempty(is_breathing) && count <= count_lim
         raw_nerve_each_trial = raw_nerve_signal(loc_x_l(i):loc_x_l(i+1));
         std_raw_nerve(i) = std(raw_nerve_each_trial);
-        rms_raw_nerve (i) = rms(raw_nerve_each_trial);
         count = count + 1;
     end
 end
@@ -46,20 +40,17 @@ si_us = si * 1e6;  % Convert sample interval to microseconds
 diff_gap = 250;
 event_duration = 500;
 std_noise=median(std_raw_nerve,'omitmissing');
-rms_noise=median(rms_raw_nerve,'omitmissing');
-if ~isempty(amp_factor)
-    amp_thre = amp_factor/d_amp ;%* std_noise;
-    diff_thre = diff_factor/d_amp ;%* std_noise;
-else
-    amp_thre = 4 * std_noise;
-    diff_thre = 3 * std_noise;
-end
+% determine noise level
+amp_thre = 4 * std_noise;
+diff_thre = 3 * std_noise;
+% event detection
 der=struct();
 [der.event_index, der.event_peak, der.amps] = Event_detection(-data_s, si_us, amp_thre, diff_gap, diff_thre, event_duration);
 der.event_index=der.event_index(2:end-1);
 der.event_peak=der.event_peak(2:end-1);
 der.amps=der.amps(2:end-1);
 
+%calculate spikes per cycle
 Data = data_s;
 spikerate_each_cycle =[];
 valid_cycle=[];
@@ -68,23 +59,11 @@ for i = 2:length(loc_x_l)-2
     is_breathing=intersect(loc_x_l(i):loc_x_l(i+1),breathing_exclude);
     if isempty(is_breathing)
         valid_cycle(cycle_count,1)=loc_x_l(i);
-       
         events_within_cycle = der.event_index(der.event_index>loc_x_l(i)&der.event_index<loc_x_l(i+1));
         spikerate_each_cycle(cycle_count,1) = length(events_within_cycle)/(loc_x_l(i+1)-loc_x_l(i))/si;
         cycle_count=cycle_count+1;
     end
 end
-fs=1/si;
-low_fs=10;
-low_si=1/low_fs;
-ds_factor=fs/low_fs;
-ds_x=1:ds_factor:length(Data);
-if ~isempty(spikerate_each_cycle)
-    ds_signal=interp1([1;valid_cycle;length(Data)],[spikerate_each_cycle(1);spikerate_each_cycle;spikerate_each_cycle(end)],ds_x,'makima');
-else
-    ds_signal=zeros(length(ds_x),1);
-end
-smooth_ds_signal=smoothdata(ds_signal,100);
 
 % Save the results of the current file into the structure
 results.filename = filename;
@@ -95,19 +74,12 @@ results.der = der;
 results.loc_x_l= loc_x_l;
 results.breathing_exclude=breathing_exclude;
 results.std_noise=std_noise;
-results.rms_noise=rms_noise;
 results.amp_thre=amp_thre;
 results.diff_thre=diff_thre;
 results.Data = Data;
 results.si_us = si_us;
 results.valid_cycle = valid_cycle;
 results.spikes_each_cycle=spikerate_each_cycle;
-results.low_si=low_si;
-results.ds_x=ds_x;
-results.ds_signal=ds_signal;
-results.ds_factor=ds_factor;
-results.smooth_ds_signal=smooth_ds_signal;
-average_spike_num=median(results.spikes_each_cycle,'omitmissing');
 
 save(['multi_unit_' filename], 'results');
 
