@@ -1,0 +1,7 @@
+{
+  "import_folder": "./import_folder/",
+  "export_folder": "./export_folder/",
+  "min_size": 2000,
+  "square_size": 100,
+  "min_branch_length": 20
+}
