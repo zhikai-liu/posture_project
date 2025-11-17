@@ -16,9 +16,9 @@ To perform image analysis, ensure you have the following software installed:
 
 To replicate the exact environment used in our analysis, refer to the [`skimage-dev.yml`](./image_analysis/skimage-dev.yml) file for installation instructions.
 
-## Nerve Signal Analysis
+## Physiology and Nerve Signal Analysis
 
-For nerve signal analysis, we used:
+For both physiology and nerve signal analysis, we used:
 
 - **MATLAB 2024a** (with the Signal Processing Toolbox)
 
